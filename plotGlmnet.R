@@ -67,5 +67,4 @@ plotBetas<-function(glmnet,labelProp=.01,ylab='Coefficient',transformFunc=functi
 	#yCoord<-par('usr')[3]-diff(par('usr')[3:4])*.175
 	yCoord<-convertLineToUser(2.9,1)
 	arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
-
 }
