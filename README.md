@@ -14,7 +14,7 @@ devtools::install_github("sherrillmix/glmnetPlotR")
 ## Examples
 
 ### Plotting cross-validated model performance
-Using an example from \code{cv.glmnet}:
+Using an example from `cv.glmnet`:
 
 ```r
 #example from cv.glmet
