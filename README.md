@@ -13,7 +13,7 @@ devtools::install_github("sherrillmix/glmnetPlotR")
 
 ## Examples
 
-### Violin point examples
+### Plotting cross-validated model performance
 Using an example from \code{cv.glmnet}:
 
 ```r
@@ -38,7 +38,7 @@ plotGlmnet(cvob1)
 ![plot of chunk cv.glmnet-example](README_files/cv.glmnet-example-1.png) 
 
 
-### Comparison with other methods
+### Tracking coefficients 
 
 ```r
 plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
