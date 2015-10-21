@@ -132,3 +132,21 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=list(f
 	arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
 	return(NULL)
 }
+
+#line: line to convert to user coordinates
+#axis: axis to do conversion on (1:4 same as axis, mtext command)
+convertLineToUser<-function(line,axis=1){
+	if(!(axis %in% 1:4))stop(simpleError('Undefined axis'))
+	axisPair<-sort((c(axis-1,axis+1)%%4)+1)
+	isHeight<-(axis%%2)==1
+	isSecond<-axis>2
+	thisMar<-par('mar')[axis]
+	marWidth<-thisMar/sum(par('mar')[axisPair])*(par('fin')-par('pin'))[isHeight+1]
+	widthPerLine<-marWidth/thisMar
+	#find base line + add in if plot doesn't cover whole device e.g. par(mfrow=c(2,1))
+	base<-ifelse(isSecond,par('fin')[isHeight+1]-widthPerLine*thisMar,widthPerLine*thisMar) + par('fig')[1+isHeight*2]*par('din')[isHeight+1]
+	func<-if(isHeight)grconvertY else grconvertX
+	out<-func(base+line*widthPerLine*ifelse(isSecond,1,-1),'inches','user')
+	return(out)
+}
+plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
