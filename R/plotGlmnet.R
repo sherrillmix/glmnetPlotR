@@ -73,8 +73,8 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' Take a glmnet object and plot out the path of the coefficient for each variable as model complexity increases.
 #'
 #' @param glmnet a glmet object from \code{\link{glmet}} 
-#' @param labelProp
-#' @param ylab 
+#' @param labelLambda label all variables that are not 0 at this the closest lambda <= labelLambda
+#' @param ylab label for y axis
 #' @param transformFunc a function to transform the betas by (e.g. \code{exp})
 #' @param ... additional arguments for \code{\link{plot}}
 #' @return NULL 
