@@ -5,7 +5,7 @@
 \title{Plot the coefficients from glmnet}
 \usage{
 plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
-  transformFunc = list(function(x) x, function(x) x), ...)
+  transformFunc = function(x) x, ...)
 }
 \arguments{
 \item{glmnet}{a glmet object from \code{\link[glmnet]{glmnet}}}
@@ -14,7 +14,7 @@ plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
 
 \item{ylab}{label for y axis}
 
-\item{transformFunc}{a list of two functions the first to transform the betas by (e.g. \code{exp}) and the second to untransform (e.g. \code{log})}
+\item{transformFunc}{a functions to adjust y-axis labels (e.g. \code{exp} to show the axis as e^beta or \code{function(x)x^2} for 2^beta)}
 
 \item{...}{additional arguments for \code{\link{plot}}}
 }

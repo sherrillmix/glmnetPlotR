@@ -75,7 +75,7 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' @param glmnet a glmet object from \code{\link[glmnet]{glmnet}} 
 #' @param labelLambda label all variables that are not 0 at this the closest lambda <= labelLambda
 #' @param ylab label for y axis
-#' @param transformFunc a list of two functions the first to transform the betas by (e.g. \code{exp}) and the second to untransform (e.g. \code{log})
+#' @param transformFunc a functions to adjust y-axis labels (e.g. \code{exp} to show the axis as e^beta or \code{function(x)x^2} for 2^beta)
 #' @param ... additional arguments for \code{\link{plot}}
 #' @return NULL 
 #' @import glmnet
@@ -96,25 +96,25 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' set.seed(1011)
 #' cvob1=glmnet::cv.glmnet(x,y)
 #' plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
-plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=list(function(x)x,function(x)x),...){
+plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=function(x)x,...){
 	par(mar=c(4,3.5,.5,.5))
 	nonZeros<-apply(glmnet$beta,1,function(x)any(x!=0))
 	betas<-as.matrix(glmnet$beta[nonZeros,])
 	nVar<-apply(betas,2,function(x)sum(abs(x)>0))
-	betas<-transformFunc[[1]](betas)
+	betas<-betas
 	cols<-rainbow(nrow(betas),s=.7,alpha=.8)
 	plot(1,1,xlim=rev(range(log10(glmnet$lambda)))+c(0,-.2),ylim=range(betas),xaxt='n',xlab='',las=1,ylab=ylab,...,mgp=c(2.5,1,0),yaxt='n')
 	sapply(1:nrow(betas),function(x)lines(log10(glmnet$lambda),betas[x,],col=cols[x],lwd=2))
 	prettyX<-pretty(log10(glmnet$lambda),high.u.bias=90)
 	axis(1,prettyX,sapply(prettyX,function(x)as.expression(bquote(10^.(x)))),las=1)
-	prettyY<-pretty(transformFunc[[2]](betas),high.u.bias=90)
-	axis(2,prettyY,prettyY,transformFunc[[2]](prettyY),las=1)
+	prettyY<-pretty(betas,high.u.bias=90)
+	axis(2,prettyY,sub('[.0]+$','',format(transformFunc(prettyY))),las=1)
 	title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
 	if(labelLambda>0){
-		selectVars<-which(betas[,max(which(glmnet$lambda>=labelLambda))]!=transformFunc[[1]](0))
+		selectVars<-which(betas[,max(which(glmnet$lambda>=labelLambda))]!=0)
 		selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
 		varNames<-rownames(betas)[selectVars]
-		yPos<-transformFunc[[1]](betas[selectVars,ncol(betas)])
+		yPos<-betas[selectVars,ncol(betas)]+strheight('M')*.2
 		#yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
 		#xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
 		offsetY<-yPos
