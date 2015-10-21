@@ -1,4 +1,26 @@
-plotGlmnet<-function(fit,markBest=FALSE,...){
+#' @param fit a cv.glmet object from \code{\link{cv.glmet}} 
+#' @param markBest1SE add a vertical line through the least complex model within 1 standard error of the best model
+#' @param ... extra arguments to plot
+#' @return NULL 
+#' @export
+#' @examples
+#' #example from cv.glmet
+#' library(glmnet)
+#' set.seed(1010)
+#' n=1000;p=100
+#' nzc=trunc(p/10)
+#' x=matrix(rnorm(n*p),n,p)
+#' beta=rnorm(nzc)
+#' fx= x[,seq(nzc)] %*% beta
+#' eps=rnorm(n)*5
+#' y=drop(fx+eps)
+#' px=exp(fx)
+#' px=px/(1+px)
+#' ly=rbinom(n=length(px),prob=px,size=1)
+#' set.seed(1011)
+#' cvob1=cv.glmnet(x,y)
+#' plotGlmnet(cvob1)
+plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 	extraCex<-.85
 	par(mar=c(4.1,4.8,.5,.5))
 	yRange<-range(c(fit$cvup,fit$cvlo))
@@ -16,7 +38,7 @@ plotGlmnet<-function(fit,markBest=FALSE,...){
 	axis(2,prettyY,las=1)
 	prettyX<-pretty(log10(fit$lambda),high.u.bias=90)
 	axis(1,prettyX,sapply(prettyX,function(x)as.expression(bquote(10^.(x)))),las=1)
-	if(markBest)abline(v=log10(c(fit$lambda.1se)),lty=2)#fit$lambda.min,
+	if(markBest1SE)abline(v=log10(c(fit$lambda.1se)),lty=2)#fit$lambda.min,
 	segments(log10(fit$lambda),fit$cvup,log10(fit$lambda),fit$cvlo,col='grey')
 	stepsize<-diff(log10(fit$lambda))[1]
 	segments(log10(fit$lambda)-stepsize/2,fit$cvup,log10(fit$lambda)+stepsize/2,fit$cvup,col='grey')
@@ -38,27 +60,68 @@ plotGlmnet<-function(fit,markBest=FALSE,...){
 	#yCoord<-par('usr')[3]-diff(par('usr')[3:4])*.175
 	yCoord<-convertLineToUser(2.9,1)
 	arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
+	return(NULL)
 }
 
 
-plotBetas<-function(glmnet,labelProp=.01,ylab='Coefficient',transformFunc=function(x)x,...){
+#' @param glmnet a glmet object from \code{\link{glmet}} 
+#' @param labelProp
+#' @param ylab 
+#' @param transformFunc a function to transform the betas by (e.g. \code{exp})
+#' @param ... additional arguments for \code{\link{plot}}
+#' @return NULL 
+#' @export
+#' @examples
+#' #example from cv.glmet
+#' library(glmnet)
+#' set.seed(1010)
+#' n=1000;p=100
+#' nzc=trunc(p/10)
+#' x=matrix(rnorm(n*p),n,p)
+#' beta=rnorm(nzc)
+#' fx= x[,seq(nzc)] %*% beta
+#' eps=rnorm(n)*5
+#' y=drop(fx+eps)
+#' px=exp(fx)
+#' px=px/(1+px)
+#' ly=rbinom(n=length(px),prob=px,size=1)
+#' set.seed(1011)
+#' cvob1=cv.glmnet(x,y)
+#' plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
+plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=list(function(x)x,function(x)x),...){
 	par(mar=c(4,3.5,.5,.5))
 	nonZeros<-apply(glmnet$beta,1,function(x)any(x!=0))
 	betas<-glmnet$beta[nonZeros,]
-	nVar<-apply(betas,2,function(x)sum(x>0))
-	betas<-transformFunc(betas)
+	nVar<-apply(betas,2,function(x)sum(abs(x)>0))
+	betas<-transformFunc[[1]](betas)
 	#dna.R
-	cols<-rainbow.lab(nrow(betas),lightScale=0,lightMultiple=.7,alpha=.8)
-	plot(1,1,xlim=rev(range(log10(glmnet$lambda)))+c(0,-.2),ylim=range(betas),xaxt='n',xlab='',las=1,ylab=ylab,...,mgp=c(2.5,1,0))
-	sapply(1:nrow(betas),function(x)lines(log10(glmnet$lambda),betas[x,],col=cols[x],lwd=3))
+	cols<-rainbow(nrow(betas),s=.7,alpha=.8)
+	plot(1,1,xlim=rev(range(log10(glmnet$lambda)))+c(0,-.2),ylim=range(betas),xaxt='n',xlab='',las=1,ylab=ylab,...,mgp=c(2.5,1,0),yaxt='n')
+	sapply(1:nrow(betas),function(x)lines(log10(glmnet$lambda),betas[x,],col=cols[x],lwd=2))
 	prettyX<-pretty(log10(glmnet$lambda),high.u.bias=90)
 	axis(1,prettyX,sapply(prettyX,function(x)as.expression(bquote(10^.(x)))),las=1)
+	prettyY<-pretty(transformFunc[[2]](betas),high.u.bias=90)
+	axis(2,prettyY,prettyY,transformFunc[[2]](prettyY),las=1)
 	title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
-	if(labelProp>0){
-		selectVars<-which(betas[,min(which(nVar>nrow(betas)*labelProp))]!=transformFunc(0))
-		yPos<-betas[selectVars,ncol(betas)]+diff(par('usr')[3:4])*.0075
-		xPos<-par('usr')[2]-diff(par('usr')[1:2])*.005
-		text(xPos,yPos,rownames(betas)[selectVars],adj=1,col=cols[selectVars])
+	if(labelLambda>0){
+		selectVars<-which(betas[,max(which(glmnet$lambda>=labelLambda))]!=transformFunc[[1]](0))
+		selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
+		varNames<-rownames(betas)[selectVars]
+		yPos<-transformFunc[[1]](betas[selectVars,ncol(betas)])
+		#yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
+		#xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
+		offsetY<-yPos
+		for(ii in 2:length(selectVars)){
+			if(offsetY[ii]-offsetY[ii-1]<strheight(varNames[ii])){
+				offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii-1]+strheight(varNames[ii]))
+			}
+			offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii]) #keep in plot
+		}
+		xPos<-par('usr')[2]-diff(par('usr')[1:2])*.005-strwidth(varNames)*.5
+		#xPos<-xPos-diff(par('usr')[1:2])*.02*rep(c(0,1),length.out=length(selectVars))[order(yPos)]
+		text(xPos,offsetY,varNames,adj=c(.5,0),col=cols[selectVars])
+		abline(v=log10(labelLambda),lty=2)
+		segments(xPos,offsetY,log10(glmnet$lambda[ncol(betas)]),betas[selectVars,ncol(betas)],lty=2,col=cols[selectVars])
 	}
 	centerPoints<-mean(par('usr')[1:2])+diff(par('usr')[1:2])*.03*c(-1,1)
 	outPoints<-centerPoints+strwidth('Less complex',cex=par('cex.main'))*c(-1.15,1.1) #diff(par('usr')[1:2])*.32*c(-1,1)
@@ -67,4 +130,5 @@ plotBetas<-function(glmnet,labelProp=.01,ylab='Coefficient',transformFunc=functi
 	#yCoord<-par('usr')[3]-diff(par('usr')[3:4])*.175
 	yCoord<-convertLineToUser(2.9,1)
 	arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
+	return(NULL)
 }
