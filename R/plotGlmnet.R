@@ -1,3 +1,7 @@
+#' Plot model performance from cv.glmnet
+#' 
+#' Take a cv.glmnet object and plot out the change in performance as model complexity increases
+#'
 #' @param fit a cv.glmet object from \code{\link{cv.glmet}} 
 #' @param markBest1SE add a vertical line through the least complex model within 1 standard error of the best model
 #' @param ... extra arguments to plot
@@ -64,6 +68,10 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 }
 
 
+#' Plot the coefficients from glmnet
+#' 
+#' Take a glmnet object and plot out the path of the coefficient for each variable as model complexity increases.
+#'
 #' @param glmnet a glmet object from \code{\link{glmet}} 
 #' @param labelProp
 #' @param ylab 
@@ -149,4 +157,3 @@ convertLineToUser<-function(line,axis=1){
 	out<-func(base+line*widthPerLine*ifelse(isSecond,1,-1),'inches','user')
 	return(out)
 }
-plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)

@@ -1,0 +1,10 @@
+Package: plotGlmnetR
+Maintainer: Scott Sherrill-Mix <R@sherrillmix.com>
+License: GPL-2
+Title: Simple functions to plot cv.glmet and glmnet
+Type: Package
+LazyLoad: yes
+Author: Scott Sherrill-Mix
+Description: Two simple functions to plot cv.glmnet and glmnet fits nicely.
+Version: 0.1.0
+Date: 2015-10-12
