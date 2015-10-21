@@ -7,7 +7,7 @@
 plotGlmnet(fit, markBest1SE = FALSE, ...)
 }
 \arguments{
-\item{fit}{a cv.glmet object from \code{\link{cv.glmet}}}
+\item{fit}{a cv.glmet object from \code{\link[glmnet]{cv.glmnet}}}
 
 \item{markBest1SE}{add a vertical line through the least complex model within 1 standard error of the best model}
 
@@ -18,7 +18,6 @@ Take a cv.glmnet object and plot out the change in performance as model complexi
 }
 \examples{
 #example from cv.glmet
-library(glmnet)
 set.seed(1010)
 n=1000;p=100
 nzc=trunc(p/10)
@@ -31,7 +30,7 @@ px=exp(fx)
 px=px/(1+px)
 ly=rbinom(n=length(px),prob=px,size=1)
 set.seed(1011)
-cvob1=cv.glmnet(x,y)
+cvob1=glmnet::cv.glmnet(x,y)
 plotGlmnet(cvob1)
 }
 

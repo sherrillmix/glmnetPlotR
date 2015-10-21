@@ -2,14 +2,14 @@
 #' 
 #' Take a cv.glmnet object and plot out the change in performance as model complexity increases
 #'
-#' @param fit a cv.glmet object from \code{\link{cv.glmet}} 
+#' @param fit a cv.glmet object from \code{\link[glmnet]{cv.glmnet}} 
 #' @param markBest1SE add a vertical line through the least complex model within 1 standard error of the best model
 #' @param ... extra arguments to plot
 #' @return NULL 
+#' @import glmnet
 #' @export
 #' @examples
 #' #example from cv.glmet
-#' library(glmnet)
 #' set.seed(1010)
 #' n=1000;p=100
 #' nzc=trunc(p/10)
@@ -22,7 +22,7 @@
 #' px=px/(1+px)
 #' ly=rbinom(n=length(px),prob=px,size=1)
 #' set.seed(1011)
-#' cvob1=cv.glmnet(x,y)
+#' cvob1=glmnet::cv.glmnet(x,y)
 #' plotGlmnet(cvob1)
 plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 	extraCex<-.85
@@ -72,16 +72,16 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' 
 #' Take a glmnet object and plot out the path of the coefficient for each variable as model complexity increases.
 #'
-#' @param glmnet a glmet object from \code{\link{glmet}} 
+#' @param glmnet a glmet object from \code{\link[glmnet]{glmnet}} 
 #' @param labelLambda label all variables that are not 0 at this the closest lambda <= labelLambda
 #' @param ylab label for y axis
-#' @param transformFunc a function to transform the betas by (e.g. \code{exp})
+#' @param transformFunc a list of two functions the first to transform the betas by (e.g. \code{exp}) and the second to untransform (e.g. \code{log})
 #' @param ... additional arguments for \code{\link{plot}}
 #' @return NULL 
+#' @import glmnet
 #' @export
 #' @examples
 #' #example from cv.glmet
-#' library(glmnet)
 #' set.seed(1010)
 #' n=1000;p=100
 #' nzc=trunc(p/10)
@@ -94,7 +94,7 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' px=px/(1+px)
 #' ly=rbinom(n=length(px),prob=px,size=1)
 #' set.seed(1011)
-#' cvob1=cv.glmnet(x,y)
+#' cvob1=glmnet::cv.glmnet(x,y)
 #' plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=list(function(x)x,function(x)x),...){
 	par(mar=c(4,3.5,.5,.5))

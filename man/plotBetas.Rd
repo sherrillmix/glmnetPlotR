@@ -8,13 +8,13 @@ plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
   transformFunc = list(function(x) x, function(x) x), ...)
 }
 \arguments{
-\item{glmnet}{a glmet object from \code{\link{glmet}}}
+\item{glmnet}{a glmet object from \code{\link[glmnet]{glmnet}}}
 
 \item{labelLambda}{label all variables that are not 0 at this the closest lambda <= labelLambda}
 
 \item{ylab}{label for y axis}
 
-\item{transformFunc}{a function to transform the betas by (e.g. \code{exp})}
+\item{transformFunc}{a list of two functions the first to transform the betas by (e.g. \code{exp}) and the second to untransform (e.g. \code{log})}
 
 \item{...}{additional arguments for \code{\link{plot}}}
 }
@@ -23,7 +23,6 @@ Take a glmnet object and plot out the path of the coefficient for each variable 
 }
 \examples{
 #example from cv.glmet
-library(glmnet)
 set.seed(1010)
 n=1000;p=100
 nzc=trunc(p/10)
@@ -36,7 +35,7 @@ px=exp(fx)
 px=px/(1+px)
 ly=rbinom(n=length(px),prob=px,size=1)
 set.seed(1011)
-cvob1=cv.glmnet(x,y)
+cvob1=glmnet::cv.glmnet(x,y)
 plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 }
 
