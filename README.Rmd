@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`glmnetPlotR` provides a couple R functions to produce prettier plots from `glmnet and `cv.glmnet` (from the [`glmnet` package](https://cran.r-project.org/web/packages/glmnet/index.html)) results.
+`glmnetPlotR` provides a couple R functions to produce prettier plots from `glmnet` and `cv.glmnet` (from the [`glmnet` package](https://cran.r-project.org/web/packages/glmnet/index.html)) results.
 
 ## Installation
 
