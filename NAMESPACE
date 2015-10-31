@@ -2,4 +2,3 @@
 
 export(plotBetas)
 export(plotGlmnet)
-import(glmnet)

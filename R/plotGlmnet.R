@@ -6,7 +6,6 @@
 #' @param markBest1SE add a vertical line through the least complex model within 1 standard error of the best model
 #' @param ... extra arguments to plot
 #' @return NULL 
-#' @import glmnet
 #' @export
 #' @examples
 #' #example from cv.glmet
@@ -78,7 +77,6 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' @param transformFunc a functions to adjust y-axis labels (e.g. \code{exp} to show the axis as e^beta or \code{function(x)x^2} for 2^beta)
 #' @param ... additional arguments for \code{\link{plot}}
 #' @return NULL 
-#' @import glmnet
 #' @export
 #' @examples
 #' #example from cv.glmet
