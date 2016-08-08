@@ -110,23 +110,26 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
 	title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
 	if(labelLambda>0){
 		selectVars<-which(betas[,max(which(glmnet$lambda>=labelLambda))]!=0)
-		selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
-		varNames<-rownames(betas)[selectVars]
-		yPos<-betas[selectVars,ncol(betas)]+strheight('M')*.2
-		#yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
-		#xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
-		offsetY<-yPos
-		for(ii in 2:length(selectVars)){
-			if(offsetY[ii]-offsetY[ii-1]<strheight(varNames[ii])){
-				offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii-1]+strheight(varNames[ii]))
-			}
-			offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii]) #keep in plot
-		}
-		xPos<-par('usr')[2]-diff(par('usr')[1:2])*.005-strwidth(varNames)*.5
-		#xPos<-xPos-diff(par('usr')[1:2])*.02*rep(c(0,1),length.out=length(selectVars))[order(yPos)]
-		text(xPos,offsetY,varNames,adj=c(.5,0),col=cols[selectVars])
-		abline(v=log10(labelLambda),lty=2)
-		segments(xPos,offsetY,log10(glmnet$lambda[ncol(betas)]),betas[selectVars,ncol(betas)],lty=2,col=cols[selectVars])
+    if(length(selectVars)==0){
+      selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
+      varNames<-rownames(betas)[selectVars]
+      yPos<-betas[selectVars,ncol(betas)]+strheight('M')*.2
+      #yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
+      #xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
+      offsetY<-yPos
+      browser()
+      for(ii in 2:length(selectVars)){
+        if(offsetY[ii]-offsetY[ii-1]<strheight(varNames[ii])){
+          offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii-1]+strheight(varNames[ii]))
+        }
+        offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii]) #keep in plot
+      }
+      xPos<-par('usr')[2]-diff(par('usr')[1:2])*.005-strwidth(varNames)*.5
+      #xPos<-xPos-diff(par('usr')[1:2])*.02*rep(c(0,1),length.out=length(selectVars))[order(yPos)]
+      text(xPos,offsetY,varNames,adj=c(.5,0),col=cols[selectVars])
+      abline(v=log10(labelLambda),lty=2)
+      segments(xPos,offsetY,log10(glmnet$lambda[ncol(betas)]),betas[selectVars,ncol(betas)],lty=2,col=cols[selectVars])
+    }
 	}
 	centerPoints<-mean(par('usr')[1:2])+diff(par('usr')[1:2])*.03*c(-1,1)
 	outPoints<-centerPoints+strwidth('Less complex',cex=par('cex.main'))*c(-1.15,1.1) #diff(par('usr')[1:2])*.32*c(-1,1)
