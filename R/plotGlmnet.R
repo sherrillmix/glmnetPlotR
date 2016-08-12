@@ -117,11 +117,13 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
       #yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
       #xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
       offsetY<-yPos
-      for(ii in 2:length(selectVars)){
-        if(offsetY[ii]-offsetY[ii-1]<strheight(varNames[ii])){
-          offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii-1]+strheight(varNames[ii]))
+      if(length(selectVars)>1){
+        for(ii in 2:length(selectVars)){
+          if(offsetY[ii]-offsetY[ii-1]<strheight(varNames[ii])){
+            offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii-1]+strheight(varNames[ii]))
+          }
+          offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii]) #keep in plot
         }
-        offsetY[ii]<-min(par('usr')[4]-strheight(varNames[ii]),offsetY[ii]) #keep in plot
       }
       xPos<-par('usr')[2]-diff(par('usr')[1:2])*.005-strwidth(varNames)*.5
       #xPos<-xPos-diff(par('usr')[1:2])*.02*rep(c(0,1),length.out=length(selectVars))[order(yPos)]
