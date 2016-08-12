@@ -35,7 +35,7 @@ cvob1=glmnet::cv.glmnet(x,y)
 plotGlmnet(cvob1)
 ```
 
-![plot of chunk cv.glmnet-example](README_files/cv.glmnet-example-1.png) 
+![plot of chunk cv.glmnet-example](README_files/cv.glmnet-example-1.png)
 
 
 ### Tracking coefficients 
@@ -44,7 +44,7 @@ plotGlmnet(cvob1)
 plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 ```
 
-![plot of chunk glmnet-example](README_files/glmnet-example-1.png) 
+![plot of chunk glmnet-example](README_files/glmnet-example-1.png)
 
 ------
 Authors: Scott Sherrill-Mix

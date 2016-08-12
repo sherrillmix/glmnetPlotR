@@ -7,5 +7,7 @@ LazyLoad: yes
 Author: Scott Sherrill-Mix
 Description: Two simple functions to plot cv.glmnet and glmnet fits nicely.
 Version: 0.1.0
-Date: 2015-10-12
-Suggests: glmnet
+Date: 2016-08-12
+Suggests:
+    glmnet
+RoxygenNote: 5.0.1
