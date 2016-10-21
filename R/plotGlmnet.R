@@ -110,7 +110,7 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
   axis(2,prettyY,sub('[.0]+$','',format(transformFunc(prettyY))),las=1)
   title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
   if(labelLambda>0){
-    selectVars<-which(betas[,max(which(glmnet$lambda>=labelLambda))]!=0)
+    selectVars<-which(abs(betas[,max(which(glmnet$lambda>=labelLambda))])>minBeta)
     if(length(selectVars)>0){
       selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
       varNames<-rownames(betas)[selectVars]
