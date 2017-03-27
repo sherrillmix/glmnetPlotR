@@ -40,4 +40,3 @@ set.seed(1011)
 cvob1=glmnet::cv.glmnet(x,y)
 plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 }
-

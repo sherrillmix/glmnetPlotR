@@ -32,19 +32,10 @@ px=px/(1+px)
 ly=rbinom(n=length(px),prob=px,size=1)
 set.seed(1011)
 cvob1=glmnet::cv.glmnet(x,y)
-```
-
-```
-## Error in loadNamespace(name): there is no package called 'glmnet'
-```
-
-```r
 plotGlmnet(cvob1)
 ```
 
-```
-## Error in plotGlmnet(cvob1): object 'cvob1' not found
-```
+![plot of chunk cv.glmnet-example](README_files/cv.glmnet-example-1.png)
 
 
 ### Tracking coefficients 
@@ -53,9 +44,7 @@ plotGlmnet(cvob1)
 plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 ```
 
-```
-## Error in apply(glmnet$beta, 1, function(x) any(abs(x) > minBeta)): object 'cvob1' not found
-```
+![plot of chunk glmnet-example](README_files/glmnet-example-1.png)
 
 ------
 Authors: Scott Sherrill-Mix
