@@ -100,7 +100,8 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=function(x)x,minBeta=0,xlim=rev(range(log10(glmnet$lambda)))+c(0,-.2),ylim=range(betas),...){
   graphics::par(mar=c(4,3.5,.5,.5))
   nonZeros<-apply(glmnet$beta,1,function(x)any(abs(x)>minBeta))
-  betas<-as.matrix(glmnet$beta[nonZeros,,drop=FALSE])
+  inXlim=log10(glmnet$lambda)>=xlim[2]&log10(glmnet$lambda)<=xlim[1]
+  betas<-as.matrix(glmnet$beta[nonZeros,inXlim,drop=FALSE])
   cols<-grDevices::rainbow(nrow(betas),s=.7,alpha=.8)
   graphics::plot(1,1,xlim=xlim,ylim=ylim,xaxt='n',xlab='',las=1,ylab=ylab,...,mgp=c(2.5,1,0),yaxt='n')
   sapply(1:nrow(betas),function(x)graphics::lines(log10(glmnet$lambda),betas[x,],col=cols[x],lwd=2))
