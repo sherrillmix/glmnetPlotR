@@ -6,8 +6,8 @@
 \usage{
 plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
   transformFunc = function(x) x, minBeta = 0,
-  xlim = rev(range(log10(glmnet$lambda))) + c(0, -0.2), ylim = range(betas),
-  ...)
+  xlim = rev(range(log10(glmnet$lambda))) + c(0, -0.2), ylim = range(betas[,
+  inXlim]), ...)
 }
 \arguments{
 \item{glmnet}{a glmet object from \code{\link[glmnet]{glmnet}}}
