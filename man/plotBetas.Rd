@@ -5,7 +5,9 @@
 \title{Plot the coefficients from glmnet}
 \usage{
 plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
-  transformFunc = function(x) x, minBeta = 0, ...)
+  transformFunc = function(x) x, minBeta = 0,
+  xlim = rev(range(log10(glmnet$lambda))) + c(0, -0.2), ylim = range(betas),
+  ...)
 }
 \arguments{
 \item{glmnet}{a glmet object from \code{\link[glmnet]{glmnet}}}
@@ -17,6 +19,10 @@ plotBetas(glmnet, labelLambda = 0, ylab = "Coefficient",
 \item{transformFunc}{a functions to adjust y-axis labels (e.g. \code{exp} to show the axis as e^beta or \code{function(x)x^2} for 2^beta)}
 
 \item{minBeta}{the minimum absolute necessary to count beta as different from zero}
+
+\item{xlim}{minimum and maximum for limits of the x axis. Leave empty to set automatically}
+
+\item{ylim}{minimum and maximum for limits of the y axis. Leave empty to set automatically}
 
 \item{...}{additional arguments for \code{\link{plot}}}
 }
