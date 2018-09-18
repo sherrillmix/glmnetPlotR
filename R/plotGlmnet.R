@@ -108,14 +108,15 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
   prettyX<-pretty(log10(glmnet$lambda),high.u.bias=90)
   graphics::axis(1,prettyX,sapply(prettyX,function(x)as.expression(bquote(10^.(x)))),las=1)
   prettyY<-pretty(betas[,inXlim],high.u.bias=90)
-  graphics::axis(2,prettyY,sub('\\.[0]+$','',format(transformFunc(prettyY))),las=1)
+  graphics::axis(2,prettyY,sub('\\.0+$','',format(transformFunc(prettyY))),las=1)
   graphics::title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
   if(labelLambda>0){
     selectVars<-which(abs(betas[,max(which(glmnet$lambda>=labelLambda))])>minBeta)
     if(length(selectVars)>0){
-      selectVars<-selectVars[order(betas[selectVars,ncol(betas)])]
+      nCol<-max(which(inXlim))
+      selectVars<-selectVars[order(betas[selectVars,nCol])]
       varNames<-rownames(betas)[selectVars]
-      yPos<-betas[selectVars,ncol(betas)]+graphics::strheight('M')*.2
+      yPos<-betas[selectVars,nCol]+graphics::strheight('M')*.2
       #yPos<-transformFunc(0)+diff(par('usr')[3:4])*.0075*c(-1,1)[(betas[selectVars,ncol(betas)]<0)+1]
       #xPos<-log10(glmnet$lambda[apply(betas[selectVars,],1,function(x)max(which(x==0)))])
       offsetY<-yPos
@@ -131,7 +132,7 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
       #xPos<-xPos-diff(par('usr')[1:2])*.02*rep(c(0,1),length.out=length(selectVars))[order(yPos)]
       graphics::text(xPos,offsetY,varNames,adj=c(.5,0),col=cols[selectVars])
       graphics::abline(v=log10(labelLambda),lty=2)
-      graphics::segments(xPos,offsetY,log10(glmnet$lambda[ncol(betas)]),betas[selectVars,ncol(betas)],lty=2,col=cols[selectVars])
+      graphics::segments(xPos,offsetY,log10(glmnet$lambda[nCol]),betas[selectVars,nCol],lty=2,col=cols[selectVars])
     }
   }
   centerPoints<-mean(graphics::par('usr')[1:2])+diff(graphics::par('usr')[1:2])*.03*c(-1,1)
