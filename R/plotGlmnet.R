@@ -97,7 +97,8 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' set.seed(1011)
 #' cvob1=glmnet::cv.glmnet(x,y)
 #' plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
-plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=function(x)x,minBeta=0,xlim=rev(range(log10(glmnet$lambda)))+c(0,-.2),ylim=range(betas[,inXlim]),...){
+plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=function(x)x,minBeta=0,xlim=NULL,ylim=range(betas[,inXlim]),...){
+  if(is.null(xlim))xlim<-rev(range(log10(glmnet$lambda)))+c(0,-.2)
   graphics::par(mar=c(4,3.5,.5,.5))
   nonZeros<-apply(glmnet$beta,1,function(x)any(abs(x)>minBeta))
   inXlim=log10(glmnet$lambda)>=xlim[2]&log10(glmnet$lambda)<=xlim[1]
