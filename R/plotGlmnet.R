@@ -108,7 +108,7 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
   prettyX<-pretty(log10(glmnet$lambda),high.u.bias=90)
   graphics::axis(1,prettyX,sapply(prettyX,function(x)as.expression(bquote(10^.(x)))),las=1)
   prettyY<-pretty(betas[,inXlim],high.u.bias=90)
-  graphics::axis(2,prettyY,sub('[.0]+$','',format(transformFunc(prettyY))),las=1)
+  graphics::axis(2,prettyY,sub('\\.[0]+$','',format(transformFunc(prettyY))),las=1)
   graphics::title(xlab=expression(paste('Model complexity (',lambda,')')),mgp=c(3.2,1,0),cex.lab=1.2)
   if(labelLambda>0){
     selectVars<-which(abs(betas[,max(which(glmnet$lambda>=labelLambda))])>minBeta)
