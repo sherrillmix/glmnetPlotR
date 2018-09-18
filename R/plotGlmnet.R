@@ -24,6 +24,7 @@
 #' cvob1=glmnet::cv.glmnet(x,y)
 #' plotGlmnet(cvob1)
 plotGlmnet<-function(fit,markBest1SE=FALSE,...){
+  bakMar<-graphics::par('mar')
   extraCex<-.85
   graphics::par(mar=c(4.1,4.8,.5,.5))
   yRange<-range(c(fit$cvup,fit$cvlo))
@@ -63,6 +64,7 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
   #yCoord<-par('usr')[3]-diff(par('usr')[3:4])*.175
   yCoord<-convertLineToUser(2.9,1)
   graphics::arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
+  graphics::par('mar'=bakMar)
   return(invisible(NULL))
 }
 
@@ -99,6 +101,7 @@ plotGlmnet<-function(fit,markBest1SE=FALSE,...){
 #' plotBetas(cvob1$glmnet.fit,cvob1$lambda.1se)
 plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=function(x)x,minBeta=0,xlim=NULL,ylim=range(betas[,inXlim]),...){
   if(is.null(xlim))xlim<-rev(range(log10(glmnet$lambda)))+c(0,-.2)
+  bakMar<-graphics::par('mar')
   graphics::par(mar=c(4,3.5,.5,.5))
   nonZeros<-apply(glmnet$beta,1,function(x)any(abs(x)>minBeta))
   inXlim=log10(glmnet$lambda)>=xlim[2]&log10(glmnet$lambda)<=xlim[1]
@@ -143,6 +146,7 @@ plotBetas<-function(glmnet,labelLambda=0,ylab='Coefficient',transformFunc=functi
   #yCoord<-par('usr')[3]-diff(par('usr')[3:4])*.175
   yCoord<-convertLineToUser(2.9,1)
   graphics::arrows(centerPoints,yCoord,outPoints,yCoord,xpd=NA,length=.1)
+  graphics::par('mar'=bakMar)
   return(invisible(NULL))
 }
 
